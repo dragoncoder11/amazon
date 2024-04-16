@@ -5,6 +5,8 @@ class FavouritesBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListView.builder(itemCount: 3,itemBuilder: (context,index){
+      return Container(height: 100,width: double.infinity,color: Colors.amber,);
+    });
   }
 }

@@ -33,6 +33,14 @@ class _SignUpBodyState extends State<SignUpBody> {
               if (state is RegisterSuccessState) {
                 Navigator.of(context).pushReplacementNamed(Login.id);
               }
+              if (state is FailedToRegisterState) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Colors.blue,
+                          content: Text(state.errMessage),
+                        ));
+              }
             },
             builder: (context, state) {
               if (state is RegisterLoadindState) {
@@ -40,9 +48,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                   child: CircularProgressIndicator(),
                 );
               }
-              if (state is FailedToRegisterState) {
-                return Center(child: Text(state.errMessage));
-              }
+             
               return ListView(
                 children: [
                   SizedBox(
@@ -90,7 +96,7 @@ class _SignUpBodyState extends State<SignUpBody> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed(Login.id);
                       },
                       child: Text(
                         'Already have an account',

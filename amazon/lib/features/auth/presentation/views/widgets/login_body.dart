@@ -29,19 +29,25 @@ class _LoginBodyState extends State<LoginBody> {
         child: SafeArea(
           child: BlocConsumer<AuthCubit, AuthState>(
             listener: (context, state) {
-                if (state is LoginSuccessState) {
+              if (state is LoginSuccessState) {
                 Navigator.of(context).pushReplacementNamed(Home.id);
               }
+               if (state is FailedToLoginState) {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: Colors.blue,
+                          content: Text(state.errMessage??'error'),
+                        ));}
             },
             builder: (context, state) {
-                 if (state is LoginLoadindState) {
+              if (state is LoginLoadindState) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              if (state is FailedToLoginState) {
-                return Center(child: Text(state.errMessage));
-              }
+             
+              
               return ListView(
                 children: [
                   SizedBox(
@@ -72,7 +78,7 @@ class _LoginBodyState extends State<LoginBody> {
                   CustomButton(
                     onTap: () {
                       if (globalKey.currentState!.validate()) {
-                          BlocProvider.of<AuthCubit>(context).login(
+                        BlocProvider.of<AuthCubit>(context).login(
                             email: emailController.text,
                             password: passwordController.text);
                       }
@@ -84,7 +90,7 @@ class _LoginBodyState extends State<LoginBody> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(SignUp.id);
+                        Navigator.of(context).pushReplacementNamed(SignUp.id);
                       },
                       child: Text(
                         'Don\'t have an account ',

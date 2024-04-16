@@ -60,12 +60,14 @@ class OnBoarding extends StatelessWidget {
             bottom: MediaQuery.of(context).size.height * .16,
             left: 0,
             right: 0,
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomButton(onTap:(){
-                 Navigator.of(context).pushReplacementNamed(Login.id);
-              },
-              title: 'Create Account',),
+              child: CustomButton(
+                onTap: () {
+                  Navigator.of(context).pushReplacementNamed(SignUp.id);
+                },
+                title: 'Create Account',
+              ),
             ),
           ),
           Positioned(
@@ -74,9 +76,14 @@ class OnBoarding extends StatelessWidget {
             right: 0,
             child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Text(
-                  'Already Have An Account',
-                  style: Styles.style16.copyWith(color: kPrimaryColor),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed(Login.id);
+                  },
+                  child: Text(
+                    'Already Have An Account',
+                    style: Styles.style16.copyWith(color: kPrimaryColor),
+                  ),
                 )),
           ),
         ],
