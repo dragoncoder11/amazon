@@ -6,6 +6,11 @@ color: Colors.black,
 fontSize: 20,
 fontWeight: FontWeight.bold,
 );
+static const TextStyle style35B0ld=TextStyle(
+color: Colors.black,
+fontSize: 35,
+fontWeight: FontWeight.bold,
+);
 static const TextStyle style16=TextStyle(
 color: Colors.white,
 fontSize: 16,
