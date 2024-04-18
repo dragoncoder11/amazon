@@ -1,3 +1,5 @@
+import 'package:amazon/core/utils/cashe_network.dart';
+import 'package:amazon/core/utils/constants.dart';
 import 'package:amazon/features/auth/data/services/auth_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -32,19 +34,24 @@ class AuthCubit extends Cubit<AuthState> {
       emit(FailedToRegisterState(errMessage: e.toString()));
     }
   }
+
   //**********************************************************************/
-    Future login({
+  Future login({
     required String email,
     required String password,
   }) async {
     try {
       emit(LoginLoadindState());
-      var data =
-          await AuthService(dio: Dio()).auth(endPoint: 'login', data: {
+      var data = await AuthService(dio: Dio()).auth(endPoint: 'login', data: {
         'email': email,
         'password': password,
       });
       if (data['status'] == true) {
+        await CacheNetwork.insertToCache(key: 'token', value: data['data']['token']);
+       // await CacheNetwork.insertToCache(key: 'password', value: password);
+        userToken = await CacheNetwork.getCacheData(key:'token');
+       // userPassword = await CacheNetwork.getCacheData(key: 'password');
+
         emit(LoginSuccessState());
       } else {
         emit(FailedToLoginState(errMessage: data['message']));

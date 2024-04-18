@@ -16,6 +16,16 @@ color: Colors.white,
 fontSize: 16,
 fontWeight: FontWeight.w500,
 );
+static const TextStyle style15=TextStyle(
+color: Colors.black,
+fontSize: 15,
+fontWeight: FontWeight.w500,
+);
+static const TextStyle style18=TextStyle(
+color: Colors.black,
+fontSize: 18,
+fontWeight: FontWeight.w600,
+);
 static const TextStyle style16Black=TextStyle(
 color: Colors.black,
 fontSize: 16,

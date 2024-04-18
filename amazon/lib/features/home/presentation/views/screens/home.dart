@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.favorite), label: 'favourites'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart), label: 'card'),
+                icon: Icon(Icons.shopping_cart), label: 'cart'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'profile'),
           ]),
       body: pagelist.elementAt(selectedIndex),

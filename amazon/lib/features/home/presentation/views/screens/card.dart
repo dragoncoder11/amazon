@@ -9,16 +9,20 @@ class AddToCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Card',style: Styles.style24,),centerTitle: true,
-        actions:  [IconButton(onPressed: (){}, icon:const Icon(Icons.shopping_cart))],
-        leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pushReplacementNamed(Home.id);
-            },
-            icon: const Icon(Icons.arrow_back_ios)),
-      ),
+      appBar: CustomAppbar(context, title: 'My Cart',icon:Icons.shopping_cart ),
       body: const CardBody(),
+    );
+  }
+
+  static AppBar CustomAppbar(BuildContext context,{required String title, IconData? icon}) {
+    return AppBar(backgroundColor: Colors.transparent,
+      title:  Text(title,style: Styles.style24,),centerTitle: true,
+      actions:  [IconButton(onPressed: (){}, icon: Icon(icon))],
+      leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed(Home.id);
+          },
+          icon: const Icon(Icons.arrow_back_ios)),
     );
   }
 }
