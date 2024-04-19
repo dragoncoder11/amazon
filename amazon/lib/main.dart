@@ -7,6 +7,7 @@ import 'package:amazon/features/home/data/repos/home_repo_implement.dart';
 import 'package:amazon/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
 import 'package:amazon/features/home/presentation/manager/cart_cubit/cart_cubit.dart';
 import 'package:amazon/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
+import 'package:amazon/features/home/presentation/manager/favourites_cubit/favourites_cubit.dart';
 import 'package:amazon/features/home/presentation/manager/product_cubit/products_cubit.dart';
 import 'package:amazon/features/home/presentation/views/screens/details.dart';
 import 'package:amazon/features/home/presentation/views/screens/home.dart';
@@ -41,9 +42,8 @@ class AmazonApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ProductsCubit(homeRepo)..fetchProducts(),
         ),
-        BlocProvider(
-          create: (context) => CartCubit(homeRepo)..fetchCarts(),
-        ),
+        BlocProvider(create: (context) => CartCubit(homeRepo)..fetchCarts()),
+        BlocProvider(create: (context) => FavouritesCubit(homeRepo)..fetchFavourites()),
       ],
       child: MaterialApp(
         theme: ThemeData(scaffoldBackgroundColor: kScaffoldColor),

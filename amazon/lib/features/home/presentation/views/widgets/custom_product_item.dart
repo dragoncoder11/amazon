@@ -3,6 +3,7 @@ import 'package:amazon/features/home/presentation/manager/cart_cubit/cart_cubit.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utils/styles.dart';
+import '../../manager/favourites_cubit/favourites_cubit.dart';
 import 'banners_image.dart';
 
 class CustomProductItem extends StatelessWidget {
@@ -24,7 +25,7 @@ class CustomProductItem extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.bottomRight,
                   children: [
-                    BannersImage(image: productModel.image ?? ''),
+                    BannersImage(image: productModel.image!),
                     Container(
                       height: MediaQuery.of(context).size.height * .05,
                       width: MediaQuery.of(context).size.width * .08,
@@ -38,7 +39,7 @@ class CustomProductItem extends StatelessWidget {
                             onPressed: () {
                               BlocProvider.of<CartCubit>(context).addOrRemoveCart(productId: productModel.id.toString());
                             },
-                            icon: const Icon(Icons.add)),
+                            icon:  Icon(BlocProvider.of<CartCubit>(context).cartsId.contains(productModel.id.toString()) ?Icons.check:Icons.add)),
                       ),
                     ),
                     Positioned(
@@ -62,11 +63,13 @@ class CustomProductItem extends StatelessWidget {
                               Center(
                                 child: IconButton(
                                     padding: EdgeInsets.zero,
-                                    onPressed: () {},
-                                    icon: const Icon(
+                                    onPressed: () {
+                                       BlocProvider.of<FavouritesCubit>(context).addOrRemoveFavourite(productId: productModel.id.toString());
+                                    },
+                                    icon:  Icon(
                                       size: 25,
                                       Icons.favorite,
-                                      color: Colors.grey,
+                                      color:  BlocProvider.of<FavouritesCubit>(context).favouritesId.contains(productModel.id.toString())?Colors.red: Colors.grey,
                                     )),
                               ),
                             ],
@@ -93,7 +96,7 @@ class CustomProductItem extends StatelessWidget {
               style: Styles.style15,
             ),
             Text(
-              '\$${productModel.oldPrice}',
+             productModel.oldPrice==productModel.price?'' :'\$${productModel.oldPrice}',
               style: Styles.style15.copyWith(
                   decoration: TextDecoration.lineThrough, color: Colors.grey),
             ),

@@ -1,6 +1,6 @@
 import 'package:amazon/features/home/data/models/product_model.dart';
 import 'package:amazon/features/home/presentation/manager/cart_cubit/cart_cubit.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:amazon/features/home/presentation/views/widgets/banners_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,9 +10,10 @@ import 'custom_counter_circle_avatar.dart';
 
 class AddToCardItem extends StatelessWidget {
   const AddToCardItem({
-    super.key, required this.model,
+    super.key,
+    required this.model,
   });
-final ProductModel model;
+  final ProductModel model;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,15 +29,8 @@ final ProductModel model;
               child: AspectRatio(
                 aspectRatio: 3 / 4,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                      fit: BoxFit.fill,
-                      placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                      imageUrl:
-                         model.image!),
-                ),
+                    borderRadius: BorderRadius.circular(15),
+                    child: BannersImage(image: model.image!)),
               ),
             ),
             const SizedBox(
@@ -49,31 +43,44 @@ final ProductModel model;
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                     Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${model.name}',
-                          style: Styles.style16Black,
-                          overflow: TextOverflow.ellipsis,
+                        Container(
+                          width: MediaQuery.of(context).size.width * .35,
+                          child: Text(
+                            '${model.name}',
+                            maxLines: 1,
+                            style: Styles.style16Black,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           height: 3,
                         ),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('${model.price}'),
-                            Text('${model.oldPrice}'),
+                            Text('\$${model.price}'),
+                            const SizedBox(
+                              width: 12,
+                            ),
+                            Text(
+                             model.price==model.oldPrice?'': '\$${model.oldPrice}',
+                              style: TextStyle(
+                                  decoration: TextDecoration.lineThrough),
+                            ),
                           ],
                         ),
-                       const SizedBox(
+                        const SizedBox(
                           height: 12,
                         ),
                       ],
                     ),
                     IconButton(
                         onPressed: () {
-                          BlocProvider.of<CartCubit>(context).addOrRemoveCart(productId: model.id.toString());
+                          BlocProvider.of<CartCubit>(context)
+                              .addOrRemoveCart(productId: model.id.toString());
                         },
                         icon: const Icon(FontAwesomeIcons.trash))
                   ],
@@ -103,9 +110,9 @@ final ProductModel model;
                         ],
                       ),
                     ),
-                    const Text(
-                      r'$ 76',
-                      style: Styles.style20B0ld,
+                    Text(
+                      '\$${model.price}',
+                      style: Styles.style16Black,
                     )
                   ],
                 )

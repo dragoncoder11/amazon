@@ -27,10 +27,10 @@ final HomeRepo homeRepo;
   emit(FailedToGetProductsState(errMessage: e.toString()));
 }
   }
-  List<ProductModel> filteredProducts=[];
+  /* List<ProductModel> filteredProducts=[];
   void filter({required String char}){
     filteredProducts=homeRepoImplement.products.where((element) => element.name!.toLowerCase().startsWith(char.toLowerCase())).toList();
     emit(SearchState(filteredProducts: filteredProducts));
-  }
+  } */
 }
 

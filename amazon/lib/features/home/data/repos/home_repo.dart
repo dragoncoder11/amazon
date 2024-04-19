@@ -8,6 +8,7 @@ abstract class HomeRepo{
      Future<Either<Error,List<CategoriesModel>>>fetchCategories();
    Future<Either<Error,List<ProductModel>>>fetchProducts();
       Future<Either<Error,List<ProductModel>>>fetchCarts();
+      Future<Either<Error,List<ProductModel>>>fetchFavourites();
 
 
 }

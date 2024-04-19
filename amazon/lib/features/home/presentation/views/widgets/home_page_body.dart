@@ -1,13 +1,12 @@
 import 'package:amazon/core/utils/constants.dart';
 import 'package:amazon/core/utils/styles.dart';
+import 'package:amazon/features/home/data/models/product_model.dart';
 import 'package:amazon/features/home/presentation/manager/banners_cubit/banners_cubit.dart';
 import 'package:amazon/features/home/presentation/manager/categories_cubit/categories_cubit.dart';
 import 'package:amazon/features/home/presentation/manager/product_cubit/products_cubit.dart';
 import 'package:amazon/features/home/presentation/views/screens/details.dart';
-import 'package:amazon/features/home/presentation/views/widgets/add_to_card_item.dart';
 import 'package:amazon/features/home/presentation/views/widgets/custom_product_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/utils/custom_search_field.dart';
 import 'banners_image.dart';
@@ -25,7 +24,17 @@ class _HomePageBodyState extends State<HomePageBody> {
   final controller = PageController();
 
   int selectedItem = 0;
-
+  List<ProductModel> filteredProducts = [];
+  void _filter({required String char}) {
+    setState(() {
+      filteredProducts = BlocProvider.of<ProductsCubit>(context)
+          .homeRepoImplement
+          .products
+          .where((element) =>
+              element.name!.toLowerCase().startsWith(char.toLowerCase()))
+          .toList();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -33,9 +42,11 @@ class _HomePageBodyState extends State<HomePageBody> {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 20),
       child: Column(
         children: [
-           CustomSearchField(onChanged: (char) {
-             BlocProvider.of<ProductsCubit>(context).filter(char: char);
-           },),
+          CustomSearchField(
+            onChanged:(char){
+              _filter(char: char);
+            }
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -84,7 +95,8 @@ class _HomePageBodyState extends State<HomePageBody> {
                 SliverToBoxAdapter(
                   child: CustomSmoothPageIndicator(
                     controller: controller,
-                    height: 16, count: 3,
+                    height: 16,
+                    count: 3,
                   ),
                 ),
                 const SliverToBoxAdapter(
@@ -143,44 +155,54 @@ class _HomePageBodyState extends State<HomePageBody> {
                     ),
                   ),
                 ),
-                 const SliverToBoxAdapter(
+                const SliverToBoxAdapter(
                   child: SizedBox(
                     height: 15,
                   ),
                 ),
-                 SliverFillRemaining(
+                SliverFillRemaining(
                   child: BlocBuilder<ProductsCubit, ProductsState>(
                     builder: (context, state) {
-                         if (state is FailedToGetProductsState) {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.blue,
-                                    content: Text(state.errMessage ?? 'error'),
-                                  ));
-                        }
-                      if(state is ProductsSuccessState){
-                        return GridView.builder(itemCount: BlocProvider.of<ProductsCubit>(context).filteredProducts.isEmpty?state.products.length:BlocProvider.of<ProductsCubit>(context).filteredProducts.length,
-                                      physics:const BouncingScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2,
-                                                mainAxisSpacing: 10,
-                                                crossAxisSpacing: 15,
-                                                childAspectRatio: 3 / 4.3),
-                                        itemBuilder: (context,index){
-                                          return GestureDetector(onTap: () {
-                                            Navigator.of(context).pushNamed(Details.id,arguments:state.products[index] );
-                                          },child: CustomProductItem(productModel: BlocProvider.of<ProductsCubit>(context).filteredProducts.isEmpty?state.products[index]:BlocProvider.of<ProductsCubit>(context).filteredProducts[index],));
-                                        });
+                      if (state is FailedToGetProductsState) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.blue,
+                                  content: Text(state.errMessage ?? 'error'),
+                                ));
                       }
-                                         return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                      if (state is ProductsSuccessState) {
+                        return GridView.builder(
+                            itemCount: filteredProducts.isEmpty
+                                ? state.products.length
+                                : filteredProducts.length,
+                            physics: const BouncingScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 10,
+                                    crossAxisSpacing: 15,
+                                    childAspectRatio: 3 / 4.3),
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(Details.id,
+                                        arguments: state.products[index]);
+                                  },
+                                  child: CustomProductItem(
+                                    productModel:
+                                       filteredProducts.isEmpty
+                                    ? state.products[index]
+                                    : filteredProducts[index],
+                                  ));
+                            });
+                      }
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     },
                   ),
-                ), 
-             
+                ),
               ],
             ),
           )

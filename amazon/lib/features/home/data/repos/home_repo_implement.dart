@@ -2,9 +2,10 @@ import 'package:amazon/features/home/data/models/banners_model.dart';
 import 'package:amazon/features/home/data/models/categories_model.dart';
 import 'package:amazon/features/home/data/models/product_model.dart';
 import 'package:amazon/features/home/data/repos/home_repo.dart';
-import 'package:amazon/features/home/data/services/add_to_card_service.dart';
+import 'package:amazon/features/home/data/services/get_cards_service.dart';
 import 'package:amazon/features/home/data/services/banners_service.dart';
 import 'package:amazon/features/home/data/services/categories_service.dart';
+import 'package:amazon/features/home/data/services/get_favourites_service.dart';
 import 'package:amazon/features/home/data/services/product_service.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -13,7 +14,8 @@ class HomeRepoImplement implements HomeRepo {
   BannersService bannersService = BannersService(dio: Dio());
   CategoriesService categoriesService=CategoriesService(dio: Dio());
   ProductsService productsService=ProductsService(dio: Dio());
-  AddToCartService addToCartService=AddToCartService(dio: Dio());
+  GetCardsService getCardsService=GetCardsService(dio: Dio());
+  GetFavouritesService getFavouritesService=GetFavouritesService(dio: Dio());
   @override
   Future<Either<Error, List<BannersModel>>> fetchBanners() async {
     try {
@@ -58,20 +60,38 @@ class HomeRepoImplement implements HomeRepo {
   }
   
   List<ProductModel> carts = [];
-  Set<String> cartsId={} ;
+ //Set<String> cartsId = {};
+
+@override
+Future<Either<Error, List<ProductModel>>> fetchCarts() async {
+  carts.clear();
+  try {
+    var data = await getCardsService.getCarts(endPoint: 'carts');
+    for (var i in data['data']['cart_items']) {
+      carts.add(ProductModel.fromJson(i['product']));
+      //cartsId.add(i['product']['id'].toString());
+      //print(cartsId.length);
+    }
+    return right(carts);
+  } on Exception catch (e) {
+    return left(e.toString() as Error);
+  }
+}
+  List<ProductModel> favorites = [];
 
   @override
-  Future<Either<Error, List<ProductModel>>> fetchCarts() async{
-    try {
-      var data = await addToCartService.getCarts(endPoint:'carts');
-      for (var i in data['data']['cart_items']['product']) {
-        carts.add(ProductModel.fromJson(i));
-        cartsId.add(data['data']['cart_items']['product']['id'].toString());
-      }
-      return right(carts);
-    } on Exception catch (e) {
-      return left(e.toString() as Error);
+  Future<Either<Error, List<ProductModel>>> fetchFavourites()async {
+    favorites.clear();
+  try {
+    var data = await getFavouritesService.getFavourites(endPoint:'favorites');
+    for (var i in data['data']['data']) {
+      favorites.add(ProductModel.fromJson(i['product']));
+     // cartsId.add(i['product']['id'].toString());
+    //  print(cartsId.length);
     }
+    return right(favorites);
+  } on Exception catch (e) {
+    return left(e.toString() as Error);
   }
-
+}
 }

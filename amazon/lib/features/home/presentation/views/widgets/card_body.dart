@@ -24,7 +24,7 @@ class CardBody extends StatelessWidget {
            if(state is FailedToGetCartState){
             return Center(child: Text(state.errMessage));
            }
-           return const Text('vhvjhvhjv');
+           return const Center(child:CircularProgressIndicator());
           },
         ),
       ),
